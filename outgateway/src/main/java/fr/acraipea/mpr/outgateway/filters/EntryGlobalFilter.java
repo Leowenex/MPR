@@ -18,9 +18,9 @@ public class EntryGlobalFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         // Set context for LoggingGlobalFilter
-        exchange.getAttributes().put("URI", exchange.getRequest().getURI().toString());
-        exchange.getAttributes().put("METHOD", String.valueOf(exchange.getRequest().getMethod()));
-        exchange.getAttributes().put("HEADERS", exchange.getRequest().getHeaders().toString());
+        exchange.getAttributes().put(ORIGINAL_URI_KEY, exchange.getRequest().getURI().toString());
+        exchange.getAttributes().put(ORIGINAL_METHOD_KEY, String.valueOf(exchange.getRequest().getMethod()));
+        exchange.getAttributes().put(ORIGINAL_HEADERS_KEY, exchange.getRequest().getHeaders().toString());
         return chain.filter(exchange);
     }
 
