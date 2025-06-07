@@ -1,0 +1,16 @@
+meta {
+  name: GetByAccess
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8080/crk-photo/access/1234567890/photos
+  body: none
+  auth: inherit
+}
+
+headers {
+  X-Client-Id: OI01
+  X-Request-Id: 00000000000000000
+}

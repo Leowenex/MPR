@@ -1,0 +1,13 @@
+package fr.acraipea.mpr.partnermock;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class CrkphotoApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

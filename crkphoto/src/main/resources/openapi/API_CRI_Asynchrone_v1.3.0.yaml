@@ -1,0 +1,434 @@
+openapi: 3.0.0
+info:
+  version: '1.1.0'
+  title: Get CRI Photos
+
+servers:
+  - url: '{protocol}://api.interop-fibre.fr/v1'
+    variables:
+      protocol:
+        enum:
+          - https
+        default: https
+
+paths:
+  '/access/{id}/photos':
+    get:
+      tags:
+        - Get Photo's Metadata
+      summary: Get Photos metadatas for a given access id (RefPrestationPrise)
+      operationId: getPhotosByAccess
+      parameters:
+        - name: id
+          in: path
+          description: Infrastructure Operator Internal Reference (RefPrestationPrise)
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: >-
+            Credentials to authenticate an operator, it is a token
+            with scheme Negotiate.
+          required: false
+          schema:
+            type: string
+        - name: X-Request-Id
+          in: header
+          description: >-
+            Unique identifier of the request (uuid type recommended).
+          required: true
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 36
+        - name: X-Client-Id
+          in: header
+          description: Building Operator Id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get Metadata Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Photo'
+          links:
+            GetPhotoById:
+              $ref: '#/components/links/GetPhotoById'
+        '202':
+          description: Photo not yet available
+        '204':
+          description: Photo will never be available
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Resource not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  '/order/{internalReference}/photos':
+    get:
+      tags:
+        - Get Photo's Metadata
+      summary: Get Photos metadatas for a given order
+      operationId: getPhotosByOrder
+      parameters:
+        - name: internalReference
+          in: path
+          description: Commercial Operator Internal Reference (ReferenceCommandePriseInterneOc)
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: >-
+            Credentials to authenticate an operator, it is a token
+            with scheme Negotiate.
+          required: false
+          schema:
+            type: string
+        - name: X-Request-Id
+          in: header
+          description: >-
+            Unique identifier of the request (uuid type recommended).
+          required: true
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 36
+        - name: X-Client-Id
+          in: header
+          description: Building Operator Id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get Metadata Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Photo'
+          links:
+            GetPhotoById:
+              $ref: '#/components/links/GetPhotoById'
+        '202':
+          description: Photo not yet available
+        '204':
+          description: Photo will never be available
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Resource not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  '/intervention/{id}/photos':
+    get:
+      tags:
+        - Get Photo's Metadata
+      summary: Get Photos metadatas for a given itervention
+      operationId: getPhotosByIntervention
+      parameters:
+        - name: id
+          in: path
+          description: Intervention id (ReferenceCommandeSousTraitantOI)
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: >-
+            Credentials to authenticate an operator, it is a token
+            with scheme Negotiate.
+          required: false
+          schema:
+            type: string
+        - name: X-Request-Id
+          in: header
+          description: >-
+            Unique identifier of the request (uuid type recommended).
+          required: true
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 36
+        - name: X-Client-Id
+          in: header
+          description: Building Operator Id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get Metadata Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Photo'
+          links:
+            GetPhotoById:
+              $ref: '#/components/links/GetPhotoById'
+        '202':
+          description: Photo not yet available
+        '204':
+          description: Photo will never be available
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Resource not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+  '/photo/{id}':
+    get:
+      tags:
+        - Get Photo
+      summary: Get Photo
+      operationId: getPhoto
+      parameters:
+        - name: id
+          in: path
+          description: photo id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: Authorization
+          in: header
+          description: >-
+            Credentials to authenticate an operator, it is a token
+            with scheme Negotiate.
+          required: false
+          schema:
+            type: string
+        - name: X-Request-Id
+          in: header
+          description: >-
+            Unique identifier of the request (uuid type recommended).
+          required: true
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 36
+        - name: X-Client-Id
+          in: header
+          description: Building Operator Id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get Picture Ok
+          content:
+            application/jpeg:
+              schema:
+                type: string
+                format: binary
+            application/png:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Resource not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - description
+        - message
+      properties:
+        message:
+          type: string
+        description:
+          type: string
+        code:
+          type: integer
+          format: int32
+    Photo:
+      type: object
+      required:
+        - id
+        - type
+        - mimeType
+        - url
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: the id of the photo
+        name:
+          type: string
+          description: the name of the photo
+        date:
+          type: string
+          format: 'date-time'
+          description: the date of the photo
+        title:
+          type: string
+          description: the title of the photo
+        description:
+          type: string
+          description: the description of the photo
+        type:
+          type: string
+          description: the interop type of the Photo (Pb/Pto before/after)
+          enum:
+            - PTO
+            - PBO_AVANT
+            - PBO_APRES
+            - PM_AVANT
+            - PM_APRES
+            - PT_PENETRATION_LGT
+            - AERIEN_CABLE_TRAVERSE
+            - AERIEN_CABLE_POTEAU
+        mimeType:
+          type: string
+          enum:
+            - image/png
+            - image/jpeg
+        width:
+          type: integer
+          description: the width of the Photo in pixels
+        height:
+          type: integer
+          description: the height of the Photo in pixels
+        size:
+          type: integer
+          description: the size of the Photo in bytes
+        geoPositionCoords:
+          $ref: '#/components/schemas/GeoPositionCoords'
+    GeoPositionCoords:
+      type: object
+      required:
+        - latitude
+        - longitude
+        - projection
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        projection:
+          type: string
+  links:
+    GetPhotoById:
+      operationId: getPhoto
+      parameters:
+        id: '$response.body#/photos/0/id'
+      description: The `id` value returned in the response can be used as the `id` parameter in `GET /photo/{id}`.

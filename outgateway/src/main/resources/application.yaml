@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: outgateway
+
+server:
+  port: 8081
+
+gateway:
+  protocols:
+    - protocol-name: crk-photo
+      protocol-path: /crk-photo/**
+      partner-configurations:
+        - partner-code: OC01
+          partner-uri: http://localhost:8082
+          token-authentication:
+            token: TOKENLOADEDFROMSECRETINPROD
+            token-header-name: Authorization
+        - partner-code: OC02
+          partner-uri: http://localhost:8082
+    - protocol-name: e-intervention
+      protocol-path: /e-intervention/**
+      partner-configurations:
+        - partner-code: OC01
+          partner-uri: http://localhost:8082
+        - partner-code: OI01
+          partner-uri: http://localhost:8082
