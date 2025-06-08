@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 public class GatewayConfiguration {
-    @Nonnull @Valid
-    List<ProtocolConfiguration> protocols;
+
+    @Nonnull @Valid private List<ProtocolConfiguration> protocols;
+
 }

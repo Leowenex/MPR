@@ -3,6 +3,8 @@ package fr.acraipea.mpr.outgateway.service;
 import fr.acraipea.mpr.outgateway.config.GatewayConfiguration;
 import fr.acraipea.mpr.outgateway.config.PartnerConfiguration;
 import fr.acraipea.mpr.outgateway.config.ProtocolConfiguration;
+import fr.acraipea.mpr.outgateway.filters.auth.BearerTokenAuthentificationFilter;
+import fr.acraipea.mpr.outgateway.filters.auth.PreSharedTokenAuthentificationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.Route;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -32,7 +35,7 @@ public class ApiRouteLocatorImpl implements RouteLocator {
         RouteLocatorBuilder.Builder routesBuilder = routeLocatorBuilder.routes();
         return Flux.fromIterable(gatewayConfiguration.getProtocols())
                 .map(protocolConfiguration ->
-                        protocolConfiguration.getPartnerConfigurations().stream()
+                        protocolConfiguration.partnerConfigurations().stream()
                         .map(partnerConfiguration ->
                                 routesBuilder.route(
                                     buildRouteId(protocolConfiguration, partnerConfiguration),
@@ -47,24 +50,25 @@ public class ApiRouteLocatorImpl implements RouteLocator {
     }
 
     private String buildRouteId(ProtocolConfiguration protocolConfiguration, PartnerConfiguration partnerConfiguration) {
-        return protocolConfiguration.getProtocolName() + "-" + partnerConfiguration.getPartnerCode();
+        return protocolConfiguration.protocolName() + "-" + partnerConfiguration.partnerCode();
     }
 
     private Buildable<Route> buildPredicateSpec(ProtocolConfiguration protocolConfiguration, PartnerConfiguration partnerConfiguration, PredicateSpec predicateSpec) {
-        BooleanSpec booleanSpec = predicateSpec.path(protocolConfiguration.getProtocolPath());
-        booleanSpec.and().header(TARGET_PARTNER_HEADER, partnerConfiguration.getPartnerCode());
-        addAuthenticationFilter(partnerConfiguration, booleanSpec);
-        addRemoveTargetPartnerHeaderFilter(booleanSpec);
-        return booleanSpec.uri(partnerConfiguration.getPartnerUri());
+        BooleanSpec booleanSpec = predicateSpec.path(protocolConfiguration.protocolPath()); // Ensure the path matches the protocol path
+        booleanSpec.and().header(TARGET_PARTNER_HEADER, partnerConfiguration.partnerCode()); // Ensure the X-Target-Partner header matches the partner code
+        addAuthenticationFilter(partnerConfiguration, booleanSpec); // Add authentication filters if configured
+        addRemoveTargetPartnerHeaderFilter(booleanSpec); // Remove the X-Target-Partner header from the request
+        return booleanSpec.uri(partnerConfiguration.partnerUri());
     }
 
     private void addAuthenticationFilter(PartnerConfiguration partnerConfiguration, BooleanSpec booleanSpec) {
-        if (partnerConfiguration.getTokenAuthentication() != null) {
-            booleanSpec.filters(f -> f.addRequestHeader(
-                partnerConfiguration.getTokenAuthentication().getTokenHeaderName(),
-                partnerConfiguration.getTokenAuthentication().getToken()
-            ));
-        }
+
+        Optional.ofNullable(partnerConfiguration.preSharedTokenAuthentification()).ifPresent(preSharedTokenAuthentification ->
+            booleanSpec.filters(f -> f.filter(new PreSharedTokenAuthentificationFilter(preSharedTokenAuthentification))));
+
+        Optional.ofNullable(partnerConfiguration.bearerTokenAuthentication()).ifPresent(bearerTokenAuthentication ->
+            booleanSpec.filters(f -> f.filter(new BearerTokenAuthentificationFilter(bearerTokenAuthentication))));
+
         // If other authentication methods are needed, they can be added here
     }
 

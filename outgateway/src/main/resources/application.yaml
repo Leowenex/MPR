@@ -13,12 +13,18 @@ gateway:
 
         - partner-code: OC01
           partner-uri: http://localhost:8082
-          token-authentication:
+          pre-shared-token-authentification:
             token: TOKENLOADEDFROMSECRETINPROD
             token-header-name: Authorization
 
         - partner-code: OC02
           partner-uri: http://localhost:8082
+          bearer-token-authentication:
+            request-body:
+              user: passerelle-interop
+              password: passerelle-interop
+            request-url: http://localhost:8082/auth/bearer-token
+            token-request-response-field: token
 
     - protocol-name: e-intervention
       protocol-path: /e-intervention/**

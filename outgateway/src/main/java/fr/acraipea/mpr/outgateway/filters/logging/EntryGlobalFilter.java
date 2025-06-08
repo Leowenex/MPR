@@ -1,4 +1,4 @@
-package fr.acraipea.mpr.outgateway.filters;
+package fr.acraipea.mpr.outgateway.filters.logging;
 
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
